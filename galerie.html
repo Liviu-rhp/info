@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galerie - Sudură și Construcții Metalice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+        header {
+            background-color: #444;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            padding: 2rem;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Galerie</h1>
+    </header>
+    <div class="container">
+        <h2>Lucrările Noastre</h2>
+        <div class="gallery">
+            <img src="https://via.placeholder.com/200" alt="Lucrare 1">
+            <img src="https://via.placeholder.com/200" alt="Lucrare 2">
+            <img src="https://via.placeholder.com/200" alt="Lucrare 3">
+            <img src="https://via.placeholder.com/200" alt="Lucrare 4">
+            <img src="https://via.placeholder.com/200" alt="Lucrare 5">
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 Sudură și Construcții Metalice. Toate drepturile rezervate.</p>
+    </footer>
+</body>
+</html>
