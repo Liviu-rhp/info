@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mesaj = htmlspecialchars($_POST['mesaj']);
 
     // Adresa ta de e-mail
-    $to = "adresa-ta@example.com";
+    $to = "hrisculiviuandrei@gmail.com";
     $subject = "Mesaj de la $nume";
     $body = "Nume: $nume\nEmail: $email\n\nMesaj:\n$mesaj";
     $headers = "From: $email";
