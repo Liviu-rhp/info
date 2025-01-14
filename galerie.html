@@ -38,15 +38,21 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr); /* 4 coloane egale */
             gap: 1rem; /* Spațiere între imagini */
+            justify-items: center; /* Centrare pe coloane */
         }
         .gallery img {
-            width: 100%;
-            height: auto;
+            width: 200px; /* Dimensiune fixă pentru imagini */
+            height: 200px; /* Dimensiune fixă pentru imagini */
+            object-fit: cover; /* Menține proporțiile în cadrul dimensiunilor */
             border-radius: 8px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, width 0.3s, height 0.3s;
         }
         .gallery img:hover {
-            transform: scale(1.05); /* Efect de zoom la hover */
+            transform: scale(1); /* Elimină micșorarea */
+            width: auto; /* Dimensiunea originală pe lățime */
+            height: auto; /* Dimensiunea originală pe înălțime */
+            z-index: 10; /* Adu imaginea în față */
+            position: relative; /* Necesită pentru z-index */
         }
         footer {
             background-color: #333;
