@@ -45,14 +45,12 @@
             height: 200px; /* Dimensiune fixă pentru imagini */
             object-fit: cover; /* Menține proporțiile în cadrul dimensiunilor */
             border-radius: 8px;
-            transition: transform 0.3s, width 0.3s, height 0.3s;
+            transition: transform 0.3s ease, z-index 0.3s ease; /* Animație lină */
         }
         .gallery img:hover {
-            transform: scale(1); /* Elimină micșorarea */
-            width: auto; /* Dimensiunea originală pe lățime */
-            height: auto; /* Dimensiunea originală pe înălțime */
+            transform: scale(1.5); /* Mărește imaginea cu 50% */
             z-index: 10; /* Adu imaginea în față */
-            position: relative; /* Necesită pentru z-index */
+            position: relative; /* Necesită pentru ca z-index să funcționeze */
         }
         footer {
             background-color: #333;
