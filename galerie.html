@@ -41,8 +41,8 @@
             justify-items: center; /* Centrare pe coloane */
         }
         .gallery img {
-            width: 300px; /* Dimensiune fixă pentru imagini */
-            height: 300px; /* Dimensiune fixă pentru imagini */
+            width: 200px; /* Dimensiune fixă pentru imagini */
+            height: 200px; /* Dimensiune fixă pentru imagini */
             object-fit: cover; /* Menține proporțiile în cadrul dimensiunilor */
             border-radius: 8px;
             transition: transform 0.3s ease, z-index 0.3s ease; /* Animație lină */
@@ -51,7 +51,7 @@
         .gallery img.active {
             transform: scale(2); /* Mărește imaginea cu 200% */
             z-index: 10; /* Adu imaginea în față */
-            position: relative; /* Necesită pentru ca z-index să funcționeze */
+            position: fixed; /* Fixăm imaginea pentru a preveni deplasarea altora */
         }
         footer {
             background-color: #333;
@@ -91,29 +91,56 @@
     </footer>
 
     <script>
-        // Obținem toate imaginile din galerie
         const images = document.querySelectorAll('.gallery img');
 
-        // Funcție pentru a elimina clasa 'active' de la toate imaginile
         function resetActiveImages() {
-            images.forEach(image => image.classList.remove('active'));
+            images.forEach(img => {
+                img.classList.remove('active');
+                img.style.transform = '';
+                img.style.top = '';
+                img.style.left = '';
+            });
         }
 
-        // Adăugăm un eveniment de click pentru fiecare imagine
         images.forEach(image => {
-            image.addEventListener('click', () => {
-                // Dacă imaginea este deja activă, o dezactivăm
+            image.addEventListener('click', (event) => {
                 if (image.classList.contains('active')) {
-                    image.classList.remove('active');
-                } else {
-                    // Altfel, resetăm toate imaginile și activăm pe cea curentă
                     resetActiveImages();
+                } else {
+                    resetActiveImages();
+
+                    const rect = image.getBoundingClientRect();
+                    const scale = 2;
+                    const screenWidth = window.innerWidth;
+                    const screenHeight = window.innerHeight;
+
+                    const enlargedWidth = rect.width * scale;
+                    const enlargedHeight = rect.height * scale;
+
+                    let top = rect.top - (enlargedHeight - rect.height) / 2;
+                    let left = rect.left - (enlargedWidth - rect.width) / 2;
+
+                    if (left < 0) {
+                        left = 0;
+                    } else if (left + enlargedWidth > screenWidth) {
+                        left = screenWidth - enlargedWidth;
+                    }
+
+                    if (top < 0) {
+                        top = 0;
+                    } else if (top + enlargedHeight > screenHeight) {
+                        top = screenHeight - enlargedHeight;
+                    }
+
+                    image.style.position = 'fixed';
+                    image.style.top = `${top}px`;
+                    image.style.left = `${left}px`;
+                    image.style.transform = `scale(${scale})`;
                     image.classList.add('active');
                 }
             });
         });
 
-        // Dacă userul face clic în afara imaginilor, toate se resetează
         document.addEventListener('click', (event) => {
             if (!event.target.closest('.gallery')) {
                 resetActiveImages();
