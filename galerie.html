@@ -41,8 +41,8 @@
             justify-items: center; /* Centrare pe coloane */
         }
         .gallery img {
-            width: 300px; /* Dimensiune fixă pentru imagini */
-            height: 300px; /* Dimensiune fixă pentru imagini */
+            width: 200px; /* Dimensiune fixă pentru imagini */
+            height: 200px; /* Dimensiune fixă pentru imagini */
             object-fit: cover; /* Menține proporțiile în cadrul dimensiunilor */
             border-radius: 8px;
             transition: transform 0.3s ease, z-index 0.3s ease; /* Animație lină */
@@ -51,7 +51,7 @@
         .gallery img.active {
             transform: scale(2); /* Mărește imaginea cu 200% */
             z-index: 10; /* Adu imaginea în față */
-            position: relative; /* Necesită pentru ca z-index să funcționeze */
+            position: absolute; /* Poziție absolută pentru a plasa imaginea deasupra */
         }
         footer {
             background-color: #333;
@@ -91,50 +91,43 @@
     </footer>
 
     <script>
-        // Obținem toate imaginile din galerie
         const images = document.querySelectorAll('.gallery img');
 
-        // Funcție pentru a reseta toate imaginile
         function resetActiveImages() {
             images.forEach(img => {
                 img.classList.remove('active');
-                img.style.transform = '';
+                img.style.position = '';
+                img.style.top = '';
                 img.style.left = '';
-                img.style.right = '';
+                img.style.transform = '';
+                img.style.zIndex = '';
             });
         }
 
-        // Adăugăm un eveniment de click pentru fiecare imagine
         images.forEach(image => {
             image.addEventListener('click', (event) => {
-                // Dacă imaginea este deja activă, o dezactivăm
                 if (image.classList.contains('active')) {
-                    resetActiveImages();
+                    resetActiveImages(); // Imaginea revine la dimensiunea inițială dacă este deja activă
                 } else {
-                    // Resetăm toate imaginile și activăm pe cea curentă
-                    resetActiveImages();
-
-                    // Calculăm poziționarea imaginii pentru a nu ieși din cadru
+                    resetActiveImages(); // Resetează alte imagini
                     const rect = image.getBoundingClientRect();
-                    const scale = 2; // Factorul de mărire
-                    const screenWidth = window.innerWidth;
+                    const scale = 2;
 
-                    // Setăm poziția pe laterală dacă imaginea iese în afara ecranului
-                    if (rect.left < 0) {
-                        image.style.transform = `scale(${scale}) translateX(${Math.abs(rect.left)}px)`;
-                    } else if (rect.right * scale > screenWidth) {
-                        image.style.transform = `scale(${scale}) translateX(-${(rect.right * scale - screenWidth)}px)`;
-                    } else {
-                        image.style.transform = `scale(${scale})`;
-                    }
+                    // Calculăm poziția pentru a centra imaginea în ecran
+                    const offsetX = (window.innerWidth - rect.width * scale) / 2 - rect.left;
+                    const offsetY = (window.innerHeight - rect.height * scale) / 2 - rect.top;
 
-                    // Activăm imaginea
+                    image.style.position = 'absolute';
+                    image.style.top = `${rect.top + offsetY}px`;
+                    image.style.left = `${rect.left + offsetX}px`;
+                    image.style.transform = `scale(${scale})`;
+                    image.style.zIndex = '10';
                     image.classList.add('active');
                 }
             });
         });
 
-        // Dacă userul face clic în afara galeriilor, resetăm toate imaginile
+        // Dacă faceți clic în afara imaginii, toate imaginile revin la dimensiunea inițială
         document.addEventListener('click', (event) => {
             if (!event.target.closest('.gallery')) {
                 resetActiveImages();
