@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             background-color: #fff;
-            overflow: hidden;
+            overflow: hidden; /* Previne derularea paginii */
         }
         header {
             background-color: #444;
@@ -39,8 +39,9 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr); /* 4 coloane egale */
             gap: 1rem; /* Spațiere între imagini */
-            justify-items: center; /* Centrare pe coloane */
+            justify-items: center; /* Centrează imagini pe coloane */
             position: relative;
+            overflow: hidden;
         }
         .gallery img {
             width: 200px;
@@ -48,17 +49,17 @@
             object-fit: cover;
             border-radius: 8px;
             transition: transform 0.5s ease, top 0.5s ease, left 0.5s ease;
-            position: relative;
             cursor: pointer;
-            will-change: transform, top, left; /* Subliniază că această imagine va fi animată */
+            will-change: transform, top, left; /* Indică faptul că această imagine va fi animată */
+            z-index: 1; /* Asigură că imaginea este sub imaginea activă */
         }
         .gallery img.active {
-            transform: scale(2); /* Mărește imaginea */
-            z-index: 10; /* Pune imaginea în față */
-            position: absolute; /* Imaginea activă va ieși din fluxul normal */
-            top: 50%; /* Poziționare pe verticală */
-            left: 50%; /* Poziționare pe orizontală */
-            transform: translate(-50%, -50%) scale(2); /* Centrăm imaginea și o mărim */
+            transform: scale(2); /* Mărește imaginea selectată */
+            z-index: 10; /* Pune imaginea selectată deasupra celorlalte */
+            position: absolute; /* Imaginea activă iese din fluxul normal */
+            top: 50%; /* Poziționează imaginea la mijlocul vertical */
+            left: 50%; /* Poziționează imaginea la mijlocul orizontal */
+            transform: translate(-50%, -50%) scale(2); /* Centrează imaginea și o mărește */
         }
         footer {
             background-color: #333;
