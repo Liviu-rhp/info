@@ -37,7 +37,7 @@
         }
         .gallery {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 coloane egale */
+            grid-template-columns: repeat(4, 1fr); /* 4 coloane pe rând */
             gap: 1rem; /* Spațiere între imagini */
             justify-items: center; /* Centrează imagini pe coloane */
             position: relative;
@@ -60,6 +60,10 @@
             left: 50%; /* Poziționează imaginea la mijlocul orizontal */
             transform: translate(-50%, -50%) scale(2); /* Centrează imaginea și o mărește */
             z-index: 10; /* Pune imaginea activă deasupra celorlalte */
+        }
+        /* Modificări pentru 3 imagini pe rând atunci când o imagine este activă */
+        .gallery.active-row {
+            grid-template-columns: repeat(3, 1fr); /* 3 coloane pe rând */
         }
         footer {
             background-color: #333;
@@ -108,6 +112,7 @@
                 if (image === activeImage) {
                     image.classList.remove('active');
                     activeImage = null;
+                    document.querySelector('.gallery').classList.remove('active-row');
                 } else {
                     // Dacă este altă imagine, o activăm și dezactivăm pe cea activă
                     if (activeImage) {
@@ -115,6 +120,7 @@
                     }
                     image.classList.add('active');
                     activeImage = image;
+                    document.querySelector('.gallery').classList.add('active-row');
                 }
             });
         });
@@ -126,6 +132,7 @@
                     img.classList.remove('active');
                 });
                 activeImage = null;
+                document.querySelector('.gallery').classList.remove('active-row');
             }
         });
     </script>
