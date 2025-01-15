@@ -10,7 +10,6 @@
             margin: 0;
             padding: 0;
             background-color: #fff;
-            overflow: hidden; /* Previne derularea paginii */
         }
         header {
             background-color: #444;
@@ -37,33 +36,21 @@
         }
         .gallery {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 coloane pe rând */
+            grid-template-columns: repeat(4, 1fr); /* 4 coloane egale */
             gap: 1rem; /* Spațiere între imagini */
-            justify-items: center; /* Centrează imagini pe coloane */
-            position: relative;
-            overflow: hidden;
+            justify-items: center; /* Centrare pe coloane */
         }
         .gallery img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
+            width: 200px; /* Dimensiune fixă pentru imagini */
+            height: 200px; /* Dimensiune fixă pentru imagini */
+            object-fit: cover; /* Menține proporțiile în cadrul dimensiunilor */
             border-radius: 8px;
-            transition: transform 0.5s ease, top 0.5s ease, left 0.5s ease;
-            cursor: pointer;
-            will-change: transform, top, left;
-            z-index: 1;
+            transition: transform 0.3s ease, z-index 0.3s ease; /* Animație lină */
         }
-        .gallery img.active {
-            transform: scale(2); /* Mărește imaginea selectată */
-            position: absolute; /* Imaginea activă iese din fluxul normal */
-            top: 50%; /* Poziționează imaginea la mijlocul vertical */
-            left: 50%; /* Poziționează imaginea la mijlocul orizontal */
-            transform: translate(-50%, -50%) scale(2); /* Centrează imaginea și o mărește */
-            z-index: 10; /* Pune imaginea activă deasupra celorlalte */
-        }
-        /* Modificări pentru 3 imagini pe rând atunci când o imagine este activă */
-        .gallery.active-row {
-            grid-template-columns: repeat(3, 1fr); /* 3 coloane pe rând */
+        .gallery img:hover {
+            transform: scale(1.5); /* Mărește imaginea cu 50% */
+            z-index: 10; /* Adu imaginea în față */
+            position: relative; /* Necesită pentru ca z-index să funcționeze */
         }
         footer {
             background-color: #333;
@@ -96,45 +83,11 @@
             <img src="galerie6.jpeg" alt="Lucrare 6">
             <img src="galerie7.jpg" alt="Lucrare 7">
             <img src="galerie8.jpg" alt="Lucrare 8">
+            <!-- Adaugă mai multe imagini aici -->
         </div>
     </div>
     <footer>
         <p>+40 761 854 203</p>
     </footer>
-
-    <script>
-        const images = document.querySelectorAll('.gallery img');
-        let activeImage = null;
-
-        images.forEach(image => {
-            image.addEventListener('click', () => {
-                // Dacă imaginea este deja activă, o resetăm
-                if (image === activeImage) {
-                    image.classList.remove('active');
-                    activeImage = null;
-                    document.querySelector('.gallery').classList.remove('active-row');
-                } else {
-                    // Dacă este altă imagine, o activăm și dezactivăm pe cea activă
-                    if (activeImage) {
-                        activeImage.classList.remove('active');
-                    }
-                    image.classList.add('active');
-                    activeImage = image;
-                    document.querySelector('.gallery').classList.add('active-row');
-                }
-            });
-        });
-
-        // Dacă utilizatorul face clic în afara imaginii, revenim la starea inițială
-        document.addEventListener('click', (event) => {
-            if (!event.target.closest('.gallery img')) {
-                images.forEach(img => {
-                    img.classList.remove('active');
-                });
-                activeImage = null;
-                document.querySelector('.gallery').classList.remove('active-row');
-            }
-        });
-    </script>
 </body>
 </html>
