@@ -51,7 +51,7 @@
         .gallery img.active {
             transform: scale(2); /* Mărește imaginea cu 200% */
             z-index: 10; /* Adu imaginea în față */
-            position: fixed; /* Fixăm imaginea pentru a preveni deplasarea altora */
+            position: relative; /* Necesită pentru ca z-index să funcționeze */
         }
         footer {
             background-color: #333;
@@ -91,56 +91,50 @@
     </footer>
 
     <script>
+        // Obținem toate imaginile din galerie
         const images = document.querySelectorAll('.gallery img');
 
+        // Funcție pentru a reseta toate imaginile
         function resetActiveImages() {
             images.forEach(img => {
                 img.classList.remove('active');
                 img.style.transform = '';
-                img.style.top = '';
                 img.style.left = '';
+                img.style.right = '';
             });
         }
 
+        // Adăugăm un eveniment de click pentru fiecare imagine
         images.forEach(image => {
             image.addEventListener('click', (event) => {
+                // Dacă imaginea este deja activă, o dezactivăm
                 if (image.classList.contains('active')) {
                     resetActiveImages();
                 } else {
+                    // Resetăm toate imaginile și activăm pe cea curentă
                     resetActiveImages();
 
+                    // Calculăm poziționarea imaginii pentru a nu ieși din cadru
                     const rect = image.getBoundingClientRect();
-                    const scale = 2;
+                    const scale = 2; // Factorul de mărire
                     const screenWidth = window.innerWidth;
-                    const screenHeight = window.innerHeight;
 
-                    const enlargedWidth = rect.width * scale;
-                    const enlargedHeight = rect.height * scale;
-
-                    let top = rect.top - (enlargedHeight - rect.height) / 2;
-                    let left = rect.left - (enlargedWidth - rect.width) / 2;
-
-                    if (left < 0) {
-                        left = 0;
-                    } else if (left + enlargedWidth > screenWidth) {
-                        left = screenWidth - enlargedWidth;
+                    // Setăm poziția pe laterală dacă imaginea iese în afara ecranului
+                    if (rect.left < 0) {
+                        image.style.transform = `scale(${scale}) translateX(${Math.abs(rect.left)}px)`;
+                    } else if (rect.right * scale > screenWidth) {
+                        image.style.transform = `scale(${scale}) translateX(-${(rect.right * scale - screenWidth)}px)`;
+                    } else {
+                        image.style.transform = `scale(${scale})`;
                     }
 
-                    if (top < 0) {
-                        top = 0;
-                    } else if (top + enlargedHeight > screenHeight) {
-                        top = screenHeight - enlargedHeight;
-                    }
-
-                    image.style.position = 'fixed';
-                    image.style.top = `${top}px`;
-                    image.style.left = `${left}px`;
-                    image.style.transform = `scale(${scale})`;
+                    // Activăm imaginea
                     image.classList.add('active');
                 }
             });
         });
 
+        // Dacă userul face clic în afara galeriilor, resetăm toate imaginile
         document.addEventListener('click', (event) => {
             if (!event.target.closest('.gallery')) {
                 resetActiveImages();
