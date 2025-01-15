@@ -46,9 +46,10 @@
             object-fit: cover; /* Menține proporțiile în cadrul dimensiunilor */
             border-radius: 8px;
             transition: transform 0.3s ease, z-index 0.3s ease; /* Animație lină */
+            cursor: pointer;
         }
-        .gallery img:hover {
-            transform: scale(1.5); /* Mărește imaginea cu 50% */
+        .gallery img.active {
+            transform: scale(2); /* Mărește imaginea cu 200% */
             z-index: 10; /* Adu imaginea în față */
             position: relative; /* Necesită pentru ca z-index să funcționeze */
         }
@@ -83,11 +84,41 @@
             <img src="galerie6.jpeg" alt="Lucrare 6">
             <img src="galerie7.jpg" alt="Lucrare 7">
             <img src="galerie8.jpg" alt="Lucrare 8">
-            <!-- Adaugă mai multe imagini aici -->
         </div>
     </div>
     <footer>
         <p>+40 761 854 203</p>
     </footer>
+
+    <script>
+        // Obținem toate imaginile din galerie
+        const images = document.querySelectorAll('.gallery img');
+
+        // Funcție pentru a elimina clasa 'active' de la toate imaginile
+        function resetActiveImages() {
+            images.forEach(image => image.classList.remove('active'));
+        }
+
+        // Adăugăm un eveniment de click pentru fiecare imagine
+        images.forEach(image => {
+            image.addEventListener('click', () => {
+                // Dacă imaginea este deja activă, o dezactivăm
+                if (image.classList.contains('active')) {
+                    image.classList.remove('active');
+                } else {
+                    // Altfel, resetăm toate imaginile și activăm pe cea curentă
+                    resetActiveImages();
+                    image.classList.add('active');
+                }
+            });
+        });
+
+        // Dacă userul face clic în afara imaginilor, toate se resetează
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.gallery')) {
+                resetActiveImages();
+            }
+        });
+    </script>
 </body>
 </html>
