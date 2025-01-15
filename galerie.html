@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             background-color: #fff;
+            overflow: hidden;
         }
         header {
             background-color: #444;
@@ -41,17 +42,17 @@
             justify-items: center; /* Centrare pe coloane */
         }
         .gallery img {
-            width: 200px; /* Dimensiune fixă pentru imagini */
-            height: 200px; /* Dimensiune fixă pentru imagini */
-            object-fit: cover; /* Menține proporțiile în cadrul dimensiunilor */
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
             border-radius: 8px;
-            transition: transform 0.3s ease, z-index 0.3s ease; /* Animație lină */
+            transition: transform 0.5s ease, top 0.5s ease, left 0.5s ease;
+            position: relative;
             cursor: pointer;
         }
         .gallery img.active {
-            transform: scale(2); /* Mărește imaginea cu 200% */
-            z-index: 10; /* Adu imaginea în față */
-            position: absolute; /* Poziție absolută pentru a plasa imaginea deasupra */
+            transform: scale(2); /* Mărește imaginea */
+            z-index: 10; /* Pune imaginea în față */
         }
         footer {
             background-color: #333;
@@ -92,45 +93,57 @@
 
     <script>
         const images = document.querySelectorAll('.gallery img');
-
-        function resetActiveImages() {
-            images.forEach(img => {
-                img.classList.remove('active');
-                img.style.position = '';
-                img.style.top = '';
-                img.style.left = '';
-                img.style.transform = '';
-                img.style.zIndex = '';
-            });
-        }
+        let activeImage = null;
 
         images.forEach(image => {
-            image.addEventListener('click', (event) => {
-                if (image.classList.contains('active')) {
-                    resetActiveImages(); // Imaginea revine la dimensiunea inițială dacă este deja activă
-                } else {
-                    resetActiveImages(); // Resetează alte imagini
-                    const rect = image.getBoundingClientRect();
-                    const scale = 2;
+            image.addEventListener('click', () => {
+                const rect = image.getBoundingClientRect();
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
 
-                    // Calculăm poziția pentru a centra imaginea în ecran
-                    const offsetX = (window.innerWidth - rect.width * scale) / 2 - rect.left;
-                    const offsetY = (window.innerHeight - rect.height * scale) / 2 - rect.top;
+                if (image === activeImage) {
+                    // Deselectăm imaginea activă
+                    image.style.transform = '';
+                    image.style.position = '';
+                    image.style.zIndex = '';
+                    image.style.top = '';
+                    image.style.left = '';
+                    activeImage = null;
+                } else {
+                    // Resetăm toate imaginile
+                    images.forEach(img => {
+                        img.style.transform = '';
+                        img.style.position = '';
+                        img.style.zIndex = '';
+                        img.style.top = '';
+                        img.style.left = '';
+                    });
+
+                    // Activăm imaginea selectată
+                    activeImage = image;
+                    const offsetX = centerX - rect.left - rect.width / 2;
+                    const offsetY = centerY - rect.top - rect.height / 2;
 
                     image.style.position = 'absolute';
-                    image.style.top = `${rect.top + offsetY}px`;
-                    image.style.left = `${rect.left + offsetX}px`;
-                    image.style.transform = `scale(${scale})`;
+                    image.style.top = `${rect.top}px`;
+                    image.style.left = `${rect.left}px`;
                     image.style.zIndex = '10';
-                    image.classList.add('active');
+                    image.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(2)`;
                 }
             });
         });
 
-        // Dacă faceți clic în afara imaginii, toate imaginile revin la dimensiunea inițială
+        // Dacă utilizatorul face clic în afara imaginii, toate imaginile revin la dimensiunea inițială
         document.addEventListener('click', (event) => {
-            if (!event.target.closest('.gallery')) {
-                resetActiveImages();
+            if (!event.target.closest('.gallery img')) {
+                images.forEach(img => {
+                    img.style.transform = '';
+                    img.style.position = '';
+                    img.style.zIndex = '';
+                    img.style.top = '';
+                    img.style.left = '';
+                });
+                activeImage = null;
             }
         });
     </script>
