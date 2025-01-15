@@ -40,6 +40,7 @@
             grid-template-columns: repeat(4, 1fr); /* 4 coloane egale */
             gap: 1rem; /* Spațiere între imagini */
             justify-items: center; /* Centrare pe coloane */
+            position: relative;
         }
         .gallery img {
             width: 200px;
@@ -49,10 +50,15 @@
             transition: transform 0.5s ease, top 0.5s ease, left 0.5s ease;
             position: relative;
             cursor: pointer;
+            will-change: transform, top, left; /* Subliniază că această imagine va fi animată */
         }
         .gallery img.active {
             transform: scale(2); /* Mărește imaginea */
             z-index: 10; /* Pune imaginea în față */
+            position: absolute; /* Imaginea activă va ieși din fluxul normal */
+            top: 50%; /* Poziționare pe verticală */
+            left: 50%; /* Poziționare pe orizontală */
+            transform: translate(-50%, -50%) scale(2); /* Centrăm imaginea și o mărim */
         }
         footer {
             background-color: #333;
@@ -97,51 +103,26 @@
 
         images.forEach(image => {
             image.addEventListener('click', () => {
-                const rect = image.getBoundingClientRect();
-                const centerX = window.innerWidth / 2;
-                const centerY = window.innerHeight / 2;
-
+                // Dacă imaginea este deja activă, o resetăm
                 if (image === activeImage) {
-                    // Deselectăm imaginea activă
-                    image.style.transform = '';
-                    image.style.position = '';
-                    image.style.zIndex = '';
-                    image.style.top = '';
-                    image.style.left = '';
+                    image.classList.remove('active');
                     activeImage = null;
                 } else {
-                    // Resetăm toate imaginile
-                    images.forEach(img => {
-                        img.style.transform = '';
-                        img.style.position = '';
-                        img.style.zIndex = '';
-                        img.style.top = '';
-                        img.style.left = '';
-                    });
-
-                    // Activăm imaginea selectată
+                    // Dacă este altă imagine, o activăm și dezactivăm pe cea activă
+                    if (activeImage) {
+                        activeImage.classList.remove('active');
+                    }
+                    image.classList.add('active');
                     activeImage = image;
-                    const offsetX = centerX - rect.left - rect.width / 2;
-                    const offsetY = centerY - rect.top - rect.height / 2;
-
-                    image.style.position = 'absolute';
-                    image.style.top = `${rect.top}px`;
-                    image.style.left = `${rect.left}px`;
-                    image.style.zIndex = '10';
-                    image.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(2)`;
                 }
             });
         });
 
-        // Dacă utilizatorul face clic în afara imaginii, toate imaginile revin la dimensiunea inițială
+        // Dacă utilizatorul face clic în afara imaginii, revenim la starea inițială
         document.addEventListener('click', (event) => {
             if (!event.target.closest('.gallery img')) {
                 images.forEach(img => {
-                    img.style.transform = '';
-                    img.style.position = '';
-                    img.style.zIndex = '';
-                    img.style.top = '';
-                    img.style.left = '';
+                    img.classList.remove('active');
                 });
                 activeImage = null;
             }
