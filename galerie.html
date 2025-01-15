@@ -41,8 +41,8 @@
             justify-items: center; /* Centrare pe coloane */
         }
         .gallery img {
-            width: 200px; /* Dimensiune fixă pentru imagini */
-            height: 200px; /* Dimensiune fixă pentru imagini */
+            width: 300px; /* Dimensiune fixă pentru imagini */
+            height: 300px; /* Dimensiune fixă pentru imagini */
             object-fit: cover; /* Menține proporțiile în cadrul dimensiunilor */
             border-radius: 8px;
             transition: transform 0.3s ease, z-index 0.3s ease; /* Animație lină */
@@ -94,47 +94,26 @@
         // Obținem toate imaginile din galerie
         const images = document.querySelectorAll('.gallery img');
 
-        // Funcție pentru a reseta toate imaginile
+        // Funcție pentru a elimina clasa 'active' de la toate imaginile
         function resetActiveImages() {
-            images.forEach(img => {
-                img.classList.remove('active');
-                img.style.transform = '';
-                img.style.left = '';
-                img.style.right = '';
-            });
+            images.forEach(image => image.classList.remove('active'));
         }
 
         // Adăugăm un eveniment de click pentru fiecare imagine
         images.forEach(image => {
-            image.addEventListener('click', (event) => {
+            image.addEventListener('click', () => {
                 // Dacă imaginea este deja activă, o dezactivăm
                 if (image.classList.contains('active')) {
-                    resetActiveImages();
+                    image.classList.remove('active');
                 } else {
-                    // Resetăm toate imaginile și activăm pe cea curentă
+                    // Altfel, resetăm toate imaginile și activăm pe cea curentă
                     resetActiveImages();
-
-                    // Calculăm poziționarea imaginii pentru a nu ieși din cadru
-                    const rect = image.getBoundingClientRect();
-                    const scale = 2; // Factorul de mărire
-                    const screenWidth = window.innerWidth;
-
-                    // Setăm poziția pe laterală dacă imaginea iese în afara ecranului
-                    if (rect.left < 0) {
-                        image.style.transform = `scale(${scale}) translateX(${Math.abs(rect.left)}px)`;
-                    } else if (rect.right * scale > screenWidth) {
-                        image.style.transform = `scale(${scale}) translateX(-${(rect.right * scale - screenWidth)}px)`;
-                    } else {
-                        image.style.transform = `scale(${scale})`;
-                    }
-
-                    // Activăm imaginea
                     image.classList.add('active');
                 }
             });
         });
 
-        // Dacă userul face clic în afara galeriilor, resetăm toate imaginile
+        // Dacă userul face clic în afara imaginilor, toate se resetează
         document.addEventListener('click', (event) => {
             if (!event.target.closest('.gallery')) {
                 resetActiveImages();
